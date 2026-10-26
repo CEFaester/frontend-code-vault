@@ -1,8 +1,6 @@
-// src/firebase.js
 import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database'; // Vigtigt: Henter Realtime Database modulet
+import { getDatabase } from 'firebase/database';
 
-// Din unikke konfiguration fra Firebase Console
   const firebaseConfig = {
     apiKey: "AIzaSyAaXnQgj4pWWQuy7NrzrqPJkzHWr9OgyiM",
     authDomain: "programmerings-hjaelper.firebaseapp.com",
@@ -14,8 +12,6 @@ import { getDatabase } from 'firebase/database'; // Vigtigt: Henter Realtime Dat
   };
 
 
-// Initialiser Firebase
 const app = initializeApp(firebaseConfig);
 
-// Eksporter databasen, så den kan bruges i dine Vue-komponenter
 export const db = getDatabase(app);
