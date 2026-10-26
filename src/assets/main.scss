@@ -1,0 +1,15 @@
+// src/assets/scss/main.scss
+@use './variables' as *;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: $color-background;
+  color: $color-primary;
+  font-family: $font-main;
+  line-height: 1.6;
+}
