@@ -13,3 +13,34 @@ body {
   font-family: $font-main;
   line-height: 1.6;
 }
+
+// Global container til at centrere indhold på siderne
+.container {
+  max-width: $max-width-content;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+}
+
+// Global BEM-styling til navigationsbaren
+.nav-bar {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: $color-primary;
+  margin-bottom: 30px;
+
+  &__link {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: lighten($color-accent, 10%);
+    }
+
+    &.router-link-active {
+      color: $color-accent;
+    }
+  }
+}
