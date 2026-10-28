@@ -1,9 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed,onMounted } from 'vue'
 import { db } from '@/firebase.js'
 import { ref as dbRef, onValue, remove } from 'firebase/database'
 
+const copiedId = ref(null)
 const snippets = ref([])
+
+const searchQuery = ref('')
+const selectedLanguage = ref('all')
+const selectedTag = ref('all')
 
 onMounted(() => {
   const snippetsRef = dbRef(db, 'snippets')
@@ -34,8 +39,6 @@ const deleteSnippet = async (id) => {
   }
 }
 
-const copiedId = ref(null)
-
 const copyCode = async (codeText, id) => {
   try {
     await navigator.clipboard.writeText(codeText)
@@ -49,14 +52,70 @@ const copyCode = async (codeText, id) => {
   }
 }
 
+const availableTags = computed(() => {
+  const tagsSet = new Set()
+  snippets.value.forEach(snippet => {
+    if (Array.isArray(snippet.tags)) {
+      snippet.tags.forEach(tag => tagsSet.add(tag))
+    }
+  })
+  return Array.from(tagsSet)
+})
+
+const filteredSnippets = computed(() => {
+  return snippets.value.filter(snippet => {
+    const matchesSearch = 
+      snippet.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      snippet.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+
+    const matchesLanguage = 
+      selectedLanguage.value === 'all' || 
+      snippet.language.toLowerCase() === selectedLanguage.value.toLowerCase()
+
+    const matchesTag = 
+      selectedTag.value === 'all' || 
+      (Array.isArray(snippet.tags) && snippet.tags.includes(selectedTag.value))
+
+    return matchesSearch && matchesLanguage && matchesTag
+  })
+})
+
 </script>
 <template>
   <main class="vault">
     <h1 class="vault__title">Snippet Vault</h1>
+
+    <div class="vault__controls">
+      <input 
+        v-model="searchQuery" 
+        type="text" 
+        class="vault__search" 
+        placeholder="Søg i titel eller beskrivelse..."
+      />
+
+      <div class="vault__filters">
+        <select v-model="selectedLanguage" class="vault__select">
+          <option value="all">Alle sprog</option>
+          <option value="css">CSS</option>
+          <option value="scss">SCSS</option>
+          <option value="javascript">JavaScript</option>
+          <option value="vue">Vue</option>
+          <option value="html">HTML</option>
+        </select>
+    
+        <!-- Tag-filter (genereres dynamisk) -->
+        <select v-model="selectedTag" class="vault__select">
+          <option value="all">Alle tags</option>
+          <option v-for="tag in availableTags" :key="tag" :value="tag">
+            #{{ tag }}
+          </option>
+        </select>
+      </div>
+    </div>
     
     <div class="vault__grid">
       <!-- Loop igennem alle snippets -->
-      <article v-for="snippet in snippets" :key="snippet.id" class="snippet-card">
+      <article v-for="snippet in filteredSnippets" :key="snippet.id" class="snippet-card">
         <header class="snippet-card__header">
           <h2 class="snippet-card__title">{{ snippet.title }}</h2>
           <span class="snippet-card__badge">{{ snippet.language }}</span>
@@ -74,6 +133,7 @@ const copyCode = async (codeText, id) => {
             {{ copiedId === snippet.id ? 'Kopieret! ✓' : 'Kopiér' }}
           </button>
         </div>
+
 
         <footer class="snippet-card__footer">
           <div class="snippet-card__tags">
@@ -93,6 +153,11 @@ const copyCode = async (codeText, id) => {
           </div>
         </footer>
       </article>
+
+        <p v-if="filteredSnippets.length === 0" class="vault__empty">
+          Ingen snippets matchede din søgning.
+        </p>
+        
     </div>
   </main>
 </template>
