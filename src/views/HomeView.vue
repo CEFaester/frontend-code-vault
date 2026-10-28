@@ -60,9 +60,15 @@ const deleteSnippet = async (id) => {
             </span>
           </div>
 
-          <button @click="deleteSnippet(snippet.id)" class="snippet-card__delete-btn">
-            Slet
-          </button>
+          <div class="snippet-card__actions">
+            <router-link :to="`/rediger/${snippet.id}`" class="snippet-card__edit-btn">
+              Rediger
+            </router-link>
+
+            <button @click="deleteSnippet(snippet.id)" class="snippet-card__delete-btn">
+              Slet
+            </button>
+          </div>
         </footer>
       </article>
     </div>
@@ -156,6 +162,28 @@ const deleteSnippet = async (id) => {
 
     &:hover {
       background-color: #dc3545;
+      color: white;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__edit-btn {
+    background-color: transparent;
+    color: $color-primary;
+    border: 1px solid $color-primary;
+    padding: 6px 12px;
+    border-radius: $border-radius-sm;
+    font-size: 0.85rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $color-primary;
       color: white;
     }
   }
