@@ -52,33 +52,55 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .vault {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
+  &__title {
+    margin-bottom: 20px;
+    color: $color-primary;
+  }
 
-.snippet-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  &__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 }
 
 .snippet-card {
-  border: 1px solid #ddd;
+  border: 1px solid $color-border;
   padding: 20px;
-  border-radius: 8px;
-  background: #fafafa;
+  border-radius: $border-radius;
+  background-color: $color-surface-alt;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
 
   &__title {
-    margin-top: 0;
-    color: #333;
+    margin: 0;
+    color: $color-primary;
+  }
+
+  &__badge {
+    background-color: $color-primary;
+    color: white;
+    padding: 4px 10px;
+    border-radius: $border-radius-sm;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  &__description {
+    margin-bottom: 15px;
   }
 
   &__code-block {
-    background: #2d2d2d;
-    color: #f8f8f2;
+    background-color: $color-code-bg;
+    color: $color-code-text;
     padding: 15px;
-    border-radius: 6px;
+    border-radius: $border-radius-sm;
     overflow-x: auto;
   }
 
@@ -89,9 +111,10 @@ onMounted(() => {
   }
 
   &__tag {
-    background: #e0e0e0;
+    background-color: darken($color-background, 5%);
+    color: $color-text-muted;
     padding: 4px 10px;
-    border-radius: 15px;
+    border-radius: $border-radius-pill;
     font-size: 0.85em;
   }
 }

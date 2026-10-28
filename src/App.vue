@@ -10,23 +10,3 @@
     <router-view />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.nav-bar {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  background: #2c3e50;
-  margin-bottom: 30px;
-}
-
-.nav-link {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  
-  &.router-link-active {
-    color: #42b983; // Giver den aktive side en anden farve
-  }
-}
-</style>
