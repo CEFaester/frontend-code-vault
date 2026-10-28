@@ -34,6 +34,21 @@ const deleteSnippet = async (id) => {
   }
 }
 
+const copiedId = ref(null)
+
+const copyCode = async (codeText, id) => {
+  try {
+    await navigator.clipboard.writeText(codeText)
+    copiedId.value = id
+    
+    setTimeout(() => {
+      copiedId.value = null
+    }, 2000)
+  } catch (error) {
+    console.error('Kunne ikke kopiere koden:', error)
+  }
+}
+
 </script>
 <template>
   <main class="vault">
@@ -49,9 +64,16 @@ const deleteSnippet = async (id) => {
         
         <p class="snippet-card__description">{{ snippet.description }}</p>
         
-        <pre class="snippet-card__code-block">
-          <code>{{ snippet.code }}</code>
-        </pre>
+        <div class="snippet-card__code-wrapper">
+          <pre class="snippet-card__code-block"><code>{{ snippet.code }}</code></pre>
+          
+          <button 
+            @click="copyCode(snippet.code, snippet.id)" 
+            class="snippet-card__copy-btn"
+          >
+            {{ copiedId === snippet.id ? 'Kopieret! ✓' : 'Kopiér' }}
+          </button>
+        </div>
 
         <footer class="snippet-card__footer">
           <div class="snippet-card__tags">
@@ -95,6 +117,40 @@ const deleteSnippet = async (id) => {
   border-radius: $border-radius;
   background-color: $color-surface-alt;
 
+  &__code-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+  }
+
+  &__code-block {
+    background-color: $color-code-bg;
+    color: $color-code-text;
+    padding: 15px;
+    padding-bottom: 40px; 
+    border-radius: $border-radius-sm;
+    overflow-x: auto;
+  }
+
+  &__copy-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: $color-code-text;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 4px 10px;
+    border-radius: $border-radius-sm;
+    font-size: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;
@@ -131,7 +187,7 @@ const deleteSnippet = async (id) => {
 
 &__footer {
     display: flex;
-    justify-content: space-between; // Skubber tags til venstre og knappen til højre
+    justify-content: space-between;
     align-items: flex-end;
     margin-top: 15px;
   }
