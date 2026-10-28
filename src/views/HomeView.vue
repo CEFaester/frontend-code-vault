@@ -123,10 +123,17 @@ const deleteSnippet = async (id) => {
     overflow-x: auto;
   }
 
+&__footer {
+    display: flex;
+    justify-content: space-between; // Skubber tags til venstre og knappen til højre
+    align-items: flex-end;
+    margin-top: 15px;
+  }
+
   &__tags {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
-    margin-top: 15px;
   }
 
   &__tag {
@@ -135,6 +142,22 @@ const deleteSnippet = async (id) => {
     padding: 4px 10px;
     border-radius: $border-radius-pill;
     font-size: 0.85em;
+  }
+
+  &__delete-btn {
+    background-color: transparent;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    padding: 6px 12px;
+    border-radius: $border-radius-sm;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #dc3545;
+      color: white;
+    }
   }
 }
 </style>
