@@ -83,3 +83,72 @@ const saveSnippet = async () => {
     </form>
   </main>
 </template>
+
+<style lang="scss" scoped>
+.add-view {
+  &__title {
+    margin-bottom: 24px;
+    color: $color-primary;
+  }
+}
+
+.snippet-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: $color-surface-alt;
+  padding: 30px;
+  border-radius: $border-radius;
+  border: 1px solid $color-border;
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: $color-primary;
+  }
+
+  &__input, 
+  &__textarea {
+    padding: 12px;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-sm;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: $color-surface;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-accent;
+    }
+  }
+
+  &__textarea {
+    min-height: 150px;
+    resize: vertical;
+    font-family: monospace; 
+  }
+
+  &__submit {
+    margin-top: 10px;
+    padding: 12px 24px;
+    background-color: $color-accent;
+    color: white;
+    border: none;
+    border-radius: $border-radius-sm;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: $color-accent-hover;
+    }
+  }
+}
+</style>
