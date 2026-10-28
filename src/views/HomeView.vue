@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { db } from '@/firebase.js'
-import { ref as dbRef, onValue } from 'firebase/database'
+import { ref as dbRef, onValue, remove } from 'firebase/database'
 
 const snippets = ref([])
 
@@ -21,6 +21,19 @@ onMounted(() => {
     }
   })
 })
+
+const deleteSnippet = async (id) => {
+  if (confirm("Er du sikker på, at du vil slette denne snippet?")) {
+    try {
+      const exactSnippetRef = dbRef(db, `snippets/${id}`)
+      await remove(exactSnippetRef)
+    } catch (error) {
+      console.error("Kunne ikke slette:", error)
+      alert("Der skete en fejl. Tjek konsollen.")
+    }
+  }
+}
+
 </script>
 <template>
   <main class="vault">
@@ -39,12 +52,18 @@ onMounted(() => {
         <pre class="snippet-card__code-block">
           <code>{{ snippet.code }}</code>
         </pre>
-        
-        <div class="snippet-card__tags">
-          <span v-for="tag in snippet.tags" :key="tag" class="snippet-card__tag">
-            #{{ tag }}
-          </span>
-        </div>
+
+        <footer class="snippet-card__footer">
+          <div class="snippet-card__tags">
+            <span v-for="tag in snippet.tags" :key="tag" class="snippet-card__tag">
+              #{{ tag }}
+            </span>
+          </div>
+
+          <button @click="deleteSnippet(snippet.id)" class="snippet-card__delete-btn">
+            Slet
+          </button>
+        </footer>
       </article>
     </div>
   </main>
