@@ -1,7 +1,21 @@
-// src/assets/scss/_variables.scss
+// Farver
 $color-primary: #2c3e50;
+$color-accent: #42b983;
+$color-accent-hover: #33996b;
 $color-background: #f4f4f9;
 $color-surface: #ffffff;
+$color-surface-alt: #fafafa;
+$color-border: #dddddd;
+$color-text-muted: #666666;
+$color-code-bg: #2d2d2d;
+$color-code-text: #f8f8f2;
 
-$font-main: 'Helvetica Neue', sans-serif;
+// Typografi & Layout
+$font-main: 'Helvetica Neue', Arial, sans-serif;
+$border-radius-sm: 4px;
 $border-radius: 8px;
+$border-radius-pill: 15px;
+
+// Container bredder
+$max-width-content: 800px;
+$max-width-form: 600px;

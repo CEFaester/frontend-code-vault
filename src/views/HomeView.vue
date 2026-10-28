@@ -49,6 +49,7 @@ onMounted(() => {
     </div>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .vault {
   max-width: 800px;
