@@ -15,12 +15,13 @@ const code = ref('')
 const tags = ref('')
 
 const saveSnippet = async () => {
+  // Formatere brugerens input-string fra tags-feltet til et array af ord
   const tagsArray = tags.value
     .split(',')
     .map(tag => tag.trim())
     .filter(tag => tag !== '')
 
-
+  // Samler alle værdier fra formularen (v-model) i ét JSON-objekt
   const newSnippet = {
     title: title.value,
     language: language.value,
@@ -30,9 +31,12 @@ const saveSnippet = async () => {
   }
 
   try {
+    // Peger på overkategorien "snippets" i min Firebase database
     const snippetsRef = dbRef(db, 'snippets')
+    // push() opretter et nyt, unikt ID og gemmer objektet der
     await push(snippetsRef, newSnippet)
 
+    // Skifter side tilbage til forsiden, når koden er gemt
     router.push('/')
   } catch (error) {
     console.error("Der skete en fejl:", error)

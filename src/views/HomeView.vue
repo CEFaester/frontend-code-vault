@@ -10,16 +10,20 @@ const copiedId = ref(null)
 const snippets = ref([])
 
 onMounted(() => {
+  // Peger på hele "snippets" grenen i databasen
   const snippetsRef = dbRef(db, 'snippets')
   
+  // onValue lytter konstant efter. Hvis databasen ændres eksternt (f.eks. af botten), opdateres dette automatisk.
   onValue(snippetsRef, (snapshot) => {
     const data = snapshot.val()
     
     if (data) {
+      // Firebase leverer data som et objekt med unikke nøgler.
+      // Her konverterers det til et almindeligt array, som Vues v-for nemt kan bruge.
       snippets.value = Object.keys(data).map(key => {
         return {
-          id: key,
-          ...data[key]
+          id: key,      // Key bliver trukket ud og gemt som "id" (vigtigt til edit/delete)
+          ...data[key]  // Tilføjer resten af dataen (titel, kode, etc.)
         }
       })
     }
@@ -29,7 +33,10 @@ onMounted(() => {
 const deleteSnippet = async (id) => {
   if (confirm("Er du sikker på, at du vil slette denne snippet?")) {
     try {
+      // Finder den præcise lokation for den valgte kodestump ved hjælp af dens id
       const exactSnippetRef = dbRef(db, `snippets/${id}`)
+
+      // remove() sletter hele grenen og dens indhold permanent
       await remove(exactSnippetRef)
     } catch (error) {
       console.error("Kunne ikke slette:", error)
@@ -61,12 +68,18 @@ watch(snippets, (newSnippets) => {
   availableTags.value = Array.from(tagsSet)
 }, { deep: true })
 
+// computed property overvåger sine afhængigheder (searchQuery, selectedLanguage osv.)
+// og genberegner kun resultatet, når en af dem ændrer sig.
 const filteredSnippets = computed(() => {
+  // filter() kigger på alle snippets og returnerer kun dem, hvor kravene er sande.
   return snippets.value.filter(snippet => {
+
+    // Tjekker om titlen eller beskrivelsen indeholder søgeordet
     const matchesSearch = 
       snippet.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       snippet.description.toLowerCase().includes(searchQuery.value.toLowerCase())
 
+    // Hvis brugeren har valgt "all", godkendes sproget automatisk. Ellers tjekker den om de matcher.
     const matchesLanguage = 
       selectedLanguage.value === 'all' || 
       snippet.language.toLowerCase() === selectedLanguage.value.toLowerCase()
@@ -75,6 +88,7 @@ const filteredSnippets = computed(() => {
       selectedTag.value === 'all' || 
       (Array.isArray(snippet.tags) && snippet.tags.includes(selectedTag.value))
 
+    // Kravene sættes sammen med AND (&&). Alle tre skal være sande for at kortet vises.
     return matchesSearch && matchesLanguage && matchesTag
   })
 })

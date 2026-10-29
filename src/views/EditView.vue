@@ -13,7 +13,6 @@ const description = ref('')
 const code = ref('')
 const tags = ref('')
 
-// Hent den eksisterende data når siden loades
 onMounted(async () => {
   try {
     const snippetRef = dbRef(db, `snippets/${route.params.id}`)
@@ -51,8 +50,11 @@ const updateSnippet = async () => {
   }
 
   try {
+    // Bruger det unikke id fra sidens URL (route.params.id) 
+    // til at pege direkte på dén specifikke kodestump.
     const snippetRef = dbRef(db, `snippets/${route.params.id}`)
-    // update() overskriver kun de felter vi sender med
+
+    // update() overskriver kun præcis de felter vi sender ind, imodsætning til set() som ville overskrive hele objektet.
     await update(snippetRef, updatedData)
     router.push('/')
   } catch (error) {
