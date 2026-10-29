@@ -29,45 +29,74 @@ body {
   top: 0;
   z-index: 100;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background-color: transparent; // Gennemsigtig baggrund
-  backdrop-filter: blur(8px); // Slører kortene let i baggrunden, når du scroller
-  margin-bottom: 30px;
-  gap: 20px;
+  padding: 15px;
+  background-color: rgba(18, 18, 21, 0.75);
+  backdrop-filter: blur(12px);
+  margin-bottom: 20px;
+  gap: 15px;
 
-  &__left, &__right {
+  @media (min-width: 768px) {
+    flex-wrap: nowrap;
+    padding: 15px 30px;
+  }
+
+  &__left {
+    order: 1;
     display: flex;
     align-items: center;
+  }
+
+  &__right {
+    order: 2;
+    display: flex;
+    align-items: center;
+
+    @media (min-width: 768px) {
+      order: 3;
+    }
   }
 
   &__center {
+    order: 3;
     display: flex;
-    flex: 1;
-    max-width: 700px;
+    flex: 1 1 100%;
     gap: 10px;
     align-items: center;
+    min-width: 0;
+
+    @media (min-width: 768px) {
+      order: 2;
+      flex: 1;
+      max-width: 700px;
+    }
   }
 
   &__brand {
-    color: $color-primary; // Mørk tekst, så den kan ses på den lyse baggrund
+    color: $color-primary;
     text-decoration: none;
     font-weight: bold;
     font-size: 1.2rem;
   }
 
-  // Svævende input-felter og dropdowns
+
   &__search, &__select {
     padding: 8px 14px;
     border: 1px solid $color-border;
     border-radius: $border-radius-pill;
     font-size: 0.9rem;
-    background-color: $color-surface; // Hvid baggrund på selve felterne
+    background-color: $color-surface;
     color: $color-primary;
     outline: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); // Mild skygge der løfter feltet fra siden
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
     
     &::placeholder {
       color: $color-text-muted;

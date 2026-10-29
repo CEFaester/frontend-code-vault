@@ -1,5 +1,5 @@
 <script setup>
-import { searchQuery, selectedLanguage, selectedTag, availableTags, isFiltering, resetFilters } from '@/store/store.js'
+import { searchQuery, selectedLanguage, selectedTag, availableTags, combinedFilter } from '@/store/store.js'
 </script>
 
 <template>
@@ -18,20 +18,25 @@ import { searchQuery, selectedLanguage, selectedTag, availableTags, isFiltering,
           placeholder="Søg snippets..."
         />
 
-        <select v-model="selectedLanguage" class="nav-bar__select">
-          <option value="all">Sprog</option>
-          <option value="css">CSS</option>
-          <option value="scss">SCSS</option>
-          <option value="javascript">JS</option>
-          <option value="vue">Vue</option>
-          <option value="html">HTML</option>
-        </select>
+        <!-- Den nye kombinerede dropdown -->
+        <select v-model="combinedFilter" class="nav-bar__select">
+          <option value="all">Sprog & Tags</option>
+          
+          <!-- Sektion 1: Sprog -->
+          <optgroup label="Sprog">
+            <option value="lang:css">CSS</option>
+            <option value="lang:scss">SCSS</option>
+            <option value="lang:javascript">JS</option>
+            <option value="lang:vue">Vue</option>
+            <option value="lang:html">HTML</option>
+          </optgroup>
 
-        <select v-model="selectedTag" class="nav-bar__select">
-          <option value="all">Tags</option>
-          <option v-for="tag in availableTags" :key="tag" :value="tag">
-            #{{ tag }}
-          </option>
+          <!-- Sektion 2: Tags -->
+          <optgroup label="Tags" v-if="availableTags.length > 0">
+            <option v-for="tag in availableTags" :key="tag" :value="'tag:' + tag">
+              #{{ tag }}
+            </option>
+          </optgroup>
         </select>
 
         <button 
