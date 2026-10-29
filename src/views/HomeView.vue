@@ -3,6 +3,8 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { db } from '@/firebase.js'
 import { ref as dbRef, onValue, remove } from 'firebase/database'
 import { searchQuery, selectedLanguage, selectedTag, availableTags } from '@/store/store.js'
+import IconEdit from '@/components/icons/IconEdit.vue'
+import IconDelete from '@/components/icons/IconDelete.vue'
 
 const copiedId = ref(null)
 const snippets = ref([])
@@ -122,12 +124,22 @@ const resetFilters = () => {
           </div>
 
           <div class="snippet-card__actions">
-            <router-link :to="`/rediger/${snippet.id}`" class="snippet-card__edit-btn">
-              Rediger
+            <!-- Rediger knap med ikon -->
+            <router-link 
+              :to="`/rediger/${snippet.id}`" 
+              class="snippet-card__action-btn snippet-card__action-btn--edit"
+              title="Rediger snippet"
+            >
+              <IconEdit />
             </router-link>
 
-            <button @click="deleteSnippet(snippet.id)" class="snippet-card__delete-btn">
-              Slet
+            <!-- Slet knap med ikon -->
+            <button 
+              @click="deleteSnippet(snippet.id)" 
+              class="snippet-card__action-btn snippet-card__action-btn--delete"
+              title="Slet snippet"
+            >
+              <IconDelete />
             </button>
           </div>
         </footer>
@@ -333,41 +345,36 @@ const resetFilters = () => {
     font-size: 0.85em;
   }
 
-  &__delete-btn {
-    background-color: transparent;
-    color: #dc3545;
-    border: 1px solid #dc3545;
-    padding: 6px 12px;
+  &__action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent; // Fjern browserens standard hvide/grå baggrund på <button>
+    border: none;
+    padding: 8px; // Ekstra luft omkring ikonet
     border-radius: $border-radius-sm;
-    font-size: 0.85rem;
+    color: $color-primary; // Tydelig, lys farve i stedet for en mørk grå
     cursor: pointer;
     transition: all 0.2s ease;
 
-    &:hover {
-      background-color: #dc3545;
-      color: white;
+    svg {
+      display: block;
+      width: 20px;  // Tvinger ikonet op i en ordentlig, læsbar størrelse
+      height: 20px;
     }
-  }
 
-  &__actions {
-    display: flex;
-    gap: 10px;
-  }
+    // Rediger ikon (Hover)
+    &--edit:hover {
+      color: $color-accent;
+      border-color: $color-accent;
+      background-color: rgba(244, 166, 215, 0.15);
+    }
 
-  &__edit-btn {
-    background-color: transparent;
-    color: $color-primary;
-    border: 1px solid $color-primary;
-    padding: 6px 12px;
-    border-radius: $border-radius-sm;
-    font-size: 0.85rem;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background-color: $color-primary;
-      color: white;
+    // Slet ikon (Hover)
+    &--delete:hover {
+      color: #ef4444;
+      border-color: #ef4444;
+      background-color: rgba(239, 68, 68, 0.15);
     }
   }
 }
