@@ -157,7 +157,7 @@ const filteredSnippets = computed(() => {
         <p v-if="filteredSnippets.length === 0" class="vault__empty">
           Ingen snippets matchede din søgning.
         </p>
-        
+
     </div>
   </main>
 </template>
@@ -167,6 +167,58 @@ const filteredSnippets = computed(() => {
   &__title {
     margin-bottom: 20px;
     color: $color-primary;
+  }
+
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+
+    @media (min-width: 600px) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  &__search {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-sm;
+    font-size: 0.95rem;
+    background-color: $color-surface;
+
+    &:focus {
+      outline: none;
+      border-color: $color-accent;
+    }
+  }
+
+  &__filters {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__select {
+    padding: 10px 14px;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-sm;
+    font-size: 0.95rem;
+    background-color: $color-surface;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: $color-accent;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    color: $color-text-muted;
+    padding: 40px 0;
+    font-style: italic;
   }
 
   &__grid {
