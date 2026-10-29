@@ -24,23 +24,95 @@ body {
 // Global BEM-styling til navigationsbaren
 .nav-bar {
   display: flex;
-  gap: 20px;
-  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
   background-color: $color-primary;
   margin-bottom: 30px;
+  gap: 20px;
 
-  &__link {
+  &__left, &__right {
+    display: flex;
+    align-items: center;
+  }
+
+  &__center {
+    display: flex;
+    flex: 1;
+    max-width: 700px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  &__brand {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    transition: color 0.2s ease;
+    font-size: 1.2rem;
+  }
 
-    &:hover {
-      color: lighten($color-accent, 10%);
+  &__search, &__select {
+    padding: 8px 12px;
+    border: none;
+    border-radius: $border-radius-pill;
+    font-size: 0.9rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    outline: none;
+    
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
     }
 
-    &.router-link-active {
-      color: $color-accent;
+    &:focus {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  &__search {
+    flex: 1;
+  }
+
+  &__select {
+    cursor: pointer;
+    
+    option {
+      background-color: $color-primary;
+      color: white;
+    }
+  }
+
+  &__reset-btn {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 5px;
+    
+    &:hover {
+      color: white;
+    }
+  }
+
+  &__add-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: $color-accent;
+    color: white;
+    text-decoration: none;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+      background-color: $color-accent-hover;
+      transform: scale(1.05);
     }
   }
 }

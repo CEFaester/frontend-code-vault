@@ -1,14 +1,11 @@
 <script setup>
-import { ref, computed,onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { db } from '@/firebase.js'
 import { ref as dbRef, onValue, remove } from 'firebase/database'
+import { searchQuery, selectedLanguage, selectedTag, availableTags } from '@/store/store.js'
 
 const copiedId = ref(null)
 const snippets = ref([])
-
-const searchQuery = ref('')
-const selectedLanguage = ref('all')
-const selectedTag = ref('all')
 
 onMounted(() => {
   const snippetsRef = dbRef(db, 'snippets')
@@ -52,15 +49,15 @@ const copyCode = async (codeText, id) => {
   }
 }
 
-const availableTags = computed(() => {
+watch(snippets, (newSnippets) => {
   const tagsSet = new Set()
-  snippets.value.forEach(snippet => {
+  newSnippets.forEach(snippet => {
     if (Array.isArray(snippet.tags)) {
       snippet.tags.forEach(tag => tagsSet.add(tag))
     }
   })
-  return Array.from(tagsSet)
-})
+  availableTags.value = Array.from(tagsSet)
+}, { deep: true })
 
 const filteredSnippets = computed(() => {
   return snippets.value.filter(snippet => {
@@ -96,42 +93,6 @@ const resetFilters = () => {
 <template>
   <main class="vault">
     <h1 class="vault__title">Snippet Vault</h1>
-
-    <div class="vault__controls">
-      <input 
-        v-model="searchQuery" 
-        type="text" 
-        class="vault__search" 
-        placeholder="Søg i titel eller beskrivelse..."
-      />
-
-      <div class="vault__filters">
-        <select v-model="selectedLanguage" class="vault__select">
-          <option value="all">Alle sprog</option>
-          <option value="css">CSS</option>
-          <option value="scss">SCSS</option>
-          <option value="javascript">JavaScript</option>
-          <option value="vue">Vue</option>
-          <option value="html">HTML</option>
-        </select>
-    
-        <!-- Tag-filter (genereres dynamisk) -->
-        <select v-model="selectedTag" class="vault__select">
-          <option value="all">Alle tags</option>
-          <option v-for="tag in availableTags" :key="tag" :value="tag">
-            #{{ tag }}
-          </option>
-        </select>
-        <button 
-          v-if="isFiltering" 
-          @click="resetFilters" 
-          class="vault__reset-btn"
-          title="Nulstil alle filtre"
-        >
-          Nulstil
-        </button>
-      </div>
-    </div>
     
     <div class="vault__grid">
       <!-- Loop igennem alle snippets -->

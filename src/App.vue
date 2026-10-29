@@ -1,12 +1,59 @@
+<script setup>
+import { searchQuery, selectedLanguage, selectedTag, availableTags, isFiltering, resetFilters } from '@/store/store.js'
+</script>
+
 <template>
   <div class="app-container">
     <header class="nav-bar">
-      <!-- router-link er Vues version af et <a> tag. Det skifter side uden at genindlæse browseren -->
-      <router-link to="/" class="nav-bar__link">Mine Snippets</router-link>
-      <router-link to="/tilfoej" class="nav-bar__link">Tilføj ny</router-link>
+      
+      <div class="nav-bar__left">
+        <router-link to="/" class="nav-bar__brand">CodeVault</router-link>
+      </div>
+
+      <div class="nav-bar__center">
+        <input 
+          v-model="searchQuery" 
+          type="text" 
+          class="nav-bar__search" 
+          placeholder="Søg snippets..."
+        />
+
+        <select v-model="selectedLanguage" class="nav-bar__select">
+          <option value="all">Sprog</option>
+          <option value="css">CSS</option>
+          <option value="scss">SCSS</option>
+          <option value="javascript">JS</option>
+          <option value="vue">Vue</option>
+          <option value="html">HTML</option>
+        </select>
+
+        <select v-model="selectedTag" class="nav-bar__select">
+          <option value="all">Tags</option>
+          <option v-for="tag in availableTags" :key="tag" :value="tag">
+            #{{ tag }}
+          </option>
+        </select>
+
+        <button 
+          v-if="isFiltering" 
+          @click="resetFilters" 
+          class="nav-bar__reset-btn"
+          title="Nulstil filtre"
+        >
+          ↺
+        </button>
+      </div>
+      
+      <div class="nav-bar__right">
+        <router-link to="/tilfoej" class="nav-bar__add-btn" title="Tilføj ny snippet">
+          +
+        </router-link>
+      </div>
+
     </header>
     
-    <!-- Her bliver HomeView eller AddView vist -->
-    <router-view />
+    <div class="container">
+      <router-view />
+    </div>
   </div>
 </template>
