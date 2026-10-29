@@ -1,14 +1,19 @@
 // Farver
-$color-primary: #2c3e50;
-$color-accent: #42b983;
-$color-accent-hover: #33996b;
-$color-background: #f4f4f9;
-$color-surface: #ffffff;
-$color-surface-alt: #fafafa;
-$color-border: #dddddd;
-$color-text-muted: #666666;
-$color-code-bg: #2d2d2d;
-$color-code-text: #f8f8f2;
+$color-primary: #f4f4f5;          // Primær tekstfarve (lys råhvid)
+$color-background: #121215;       // Hovedbaggrund (mørk grafit)
+$color-surface: #1e1e24;          // Boks- & inputbaggrund
+$color-surface-alt: #18181d;      // Kort-baggrund
+$color-border: #2e2e38;           // Diskrete border-linjer
+$color-text-muted: #a1a1aa;       // Sekundær tekst & tags
+
+// Accent: Pastel Lyserød
+$color-accent: #f4a6d7;           // Hovedfarve (pastel lyserød)
+$color-accent-hover: #e88ac2;     // Lidt dybere lyserød ved hover
+$color-accent-glow: rgba(244, 166, 215, 0.25); // Glow-effekt til fokus-tilstande
+
+// Kodeblok (Mørk bund med lyserød tint)
+$color-code-bg: #0b0b0e;
+$color-code-text: #f3d5ea;
 
 // Typografi & Layout
 $font-main: 'Helvetica Neue', Arial, sans-serif;

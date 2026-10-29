@@ -22,12 +22,18 @@ body {
 }
 
 // Global BEM-styling til navigationsbaren
+// src/assets/scss/main.scss
+
 .nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 30px;
-  background-color: $color-primary;
+  background-color: transparent; // Gennemsigtig baggrund
+  backdrop-filter: blur(8px); // Slører kortene let i baggrunden, når du scroller
   margin-bottom: 30px;
   gap: 20px;
 
@@ -45,27 +51,31 @@ body {
   }
 
   &__brand {
-    color: white;
+    color: $color-primary; // Mørk tekst, så den kan ses på den lyse baggrund
     text-decoration: none;
     font-weight: bold;
     font-size: 1.2rem;
   }
 
+  // Svævende input-felter og dropdowns
   &__search, &__select {
-    padding: 8px 12px;
-    border: none;
+    padding: 8px 14px;
+    border: 1px solid $color-border;
     border-radius: $border-radius-pill;
     font-size: 0.9rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
+    background-color: $color-surface; // Hvid baggrund på selve felterne
+    color: $color-primary;
     outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); // Mild skygge der løfter feltet fra siden
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     
     &::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: $color-text-muted;
     }
 
     &:focus {
-      background-color: rgba(255, 255, 255, 0.2);
+      border-color: $color-accent;
+      box-shadow: 0 2px 8px rgba(66, 185, 131, 0.2);
     }
   }
 
@@ -77,24 +87,25 @@ body {
     cursor: pointer;
     
     option {
-      background-color: $color-primary;
-      color: white;
+      background-color: $color-surface;
+      color: $color-primary;
     }
   }
 
   &__reset-btn {
     background: transparent;
-    color: rgba(255,255,255,0.7);
+    color: $color-text-muted;
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
     padding: 0 5px;
     
     &:hover {
-      color: white;
+      color: $color-primary;
     }
   }
 
+  // Svævende grøn plus-knap
   &__add-btn {
     display: flex;
     justify-content: center;
@@ -108,11 +119,13 @@ body {
     font-size: 1.5rem;
     font-weight: bold;
     line-height: 1;
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 3px 10px rgba(66, 185, 131, 0.3); // Løfter knappen visuelt
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
       background-color: $color-accent-hover;
-      transform: scale(1.05);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 14px rgba(66, 185, 131, 0.4);
     }
   }
 }

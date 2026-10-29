@@ -92,8 +92,6 @@ const resetFilters = () => {
 </script>
 <template>
   <main class="vault">
-    <h1 class="vault__title">Snippet Vault</h1>
-    
     <div class="vault__grid">
       <!-- Loop igennem alle snippets -->
       <article v-for="snippet in filteredSnippets" :key="snippet.id" class="snippet-card">
@@ -293,8 +291,8 @@ const resetFilters = () => {
   }
 
   &__badge {
-    background-color: $color-primary;
-    color: white;
+    background-color: $color-border;
+    color: $color-primary;
     padding: 4px 10px;
     border-radius: $border-radius-sm;
     font-size: 0.85em;
