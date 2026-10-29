@@ -220,13 +220,27 @@ const resetFilters = () => {
   }
 
   &__grid {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    // Skaber kolonnerne
+    column-count: 1; // Standard på mobil
+    column-gap: 20px;
+
+    // Tilføjer flere kolonner i takt med at skærmen bliver bredere
+    @media (min-width: 768px) {
+      column-count: 2;
+    }
+    @media (min-width: 1200px) {
+      column-count: 3;
+    }
+    @media (min-width: 1600px) {
+      column-count: 4; // Perfekt til ultrabrede skærme
+    }
   }
 }
 
+
 .snippet-card {
+  break-inside: avoid; 
+  margin-bottom: 20px;
   border: 1px solid $color-border;
   padding: 20px;
   border-radius: $border-radius;
