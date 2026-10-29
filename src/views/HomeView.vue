@@ -80,6 +80,18 @@ const filteredSnippets = computed(() => {
   })
 })
 
+const isFiltering = computed(() => {
+  return searchQuery.value !== '' || 
+         selectedLanguage.value !== 'all' || 
+         selectedTag.value !== 'all'
+})
+
+const resetFilters = () => {
+  searchQuery.value = ''
+  selectedLanguage.value = 'all'
+  selectedTag.value = 'all'
+}
+
 </script>
 <template>
   <main class="vault">
@@ -110,6 +122,14 @@ const filteredSnippets = computed(() => {
             #{{ tag }}
           </option>
         </select>
+        <button 
+          v-if="isFiltering" 
+          @click="resetFilters" 
+          class="vault__reset-btn"
+          title="Nulstil alle filtre"
+        >
+          Nulstil
+        </button>
       </div>
     </div>
     
@@ -211,6 +231,23 @@ const filteredSnippets = computed(() => {
     &:focus {
       outline: none;
       border-color: $color-accent;
+    }
+  }
+
+  &__reset-btn {
+    padding: 10px 14px;
+    background-color: transparent;
+    color: $color-text-muted;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-sm;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap; // Sikrer at teksten ikke knækker over to linjer
+
+    &:hover {
+      background-color: $color-border;
+      color: $color-primary;
     }
   }
 
