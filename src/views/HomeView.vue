@@ -10,20 +10,18 @@ const copiedId = ref(null)
 const snippets = ref([])
 
 onMounted(() => {
-  // Peger på hele "snippets" grenen i databasen
+  // Henter API joken
+  fetchJoke()
+
+  // Peger på hele "snippets" grenen i databasen og henter dem live
   const snippetsRef = dbRef(db, 'snippets')
-  
-  // onValue lytter konstant efter. Hvis databasen ændres eksternt (f.eks. af botten), opdateres dette automatisk.
   onValue(snippetsRef, (snapshot) => {
     const data = snapshot.val()
-    
     if (data) {
-      // Firebase leverer data som et objekt med unikke nøgler.
-      // Her konverterers det til et almindeligt array, som Vues v-for nemt kan bruge.
       snippets.value = Object.keys(data).map(key => {
         return {
-          id: key,      // Key bliver trukket ud og gemt som "id" (vigtigt til edit/delete)
-          ...data[key]  // Tilføjer resten af dataen (titel, kode, etc.)
+          id: key,
+          ...data[key]
         }
       })
     }
@@ -33,14 +31,22 @@ onMounted(() => {
 const deleteSnippet = async (id) => {
   if (confirm("Er du sikker på, at du vil slette denne snippet?")) {
     try {
-      // Finder den præcise lokation for den valgte kodestump ved hjælp af dens id
-      const exactSnippetRef = dbRef(db, `snippets/${id}`)
+      // Byg dit endpoint: Database URL + stien til den specifikke snippet + .json
+      const firebaseUrl = `https://programmerings-hjaelper-default-rtdb.europe-west1.firebasedatabase.app/snippets/${id}.json`
+      
+      // Bruger metoden DELETE
+      const response = await fetch(firebaseUrl, {
+        method: 'DELETE'
+      })
 
-      // remove() sletter hele grenen og dens indhold permanent
-      await remove(exactSnippetRef)
+      // Tjekker om API'et svarede tilbage med en succes-kode (f.eks. 200 OK)
+      if (!response.ok) {
+        throw new Error('Netværksfejl: Kunne ikke slette i databasen')
+      }
+
     } catch (error) {
       console.error("Kunne ikke slette:", error)
-      alert("Der skete en fejl. Tjek konsollen.")
+      alert("Der skete en fejl under API-kaldet. Tjek konsollen.")
     }
   }
 }
@@ -68,18 +74,12 @@ watch(snippets, (newSnippets) => {
   availableTags.value = Array.from(tagsSet)
 }, { deep: true })
 
-// computed property overvåger sine afhængigheder (searchQuery, selectedLanguage osv.)
-// og genberegner kun resultatet, når en af dem ændrer sig.
 const filteredSnippets = computed(() => {
-  // filter() kigger på alle snippets og returnerer kun dem, hvor kravene er sande.
   return snippets.value.filter(snippet => {
-
-    // Tjekker om titlen eller beskrivelsen indeholder søgeordet
     const matchesSearch = 
       snippet.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       snippet.description.toLowerCase().includes(searchQuery.value.toLowerCase())
 
-    // Hvis brugeren har valgt "all", godkendes sproget automatisk. Ellers tjekker den om de matcher.
     const matchesLanguage = 
       selectedLanguage.value === 'all' || 
       snippet.language.toLowerCase() === selectedLanguage.value.toLowerCase()
@@ -88,7 +88,6 @@ const filteredSnippets = computed(() => {
       selectedTag.value === 'all' || 
       (Array.isArray(snippet.tags) && snippet.tags.includes(selectedTag.value))
 
-    // Kravene sættes sammen med AND (&&). Alle tre skal være sande for at kortet vises.
     return matchesSearch && matchesLanguage && matchesTag
   })
 })
@@ -106,6 +105,7 @@ const resetFilters = () => {
 }
 
 </script>
+
 <template>
   <main class="vault">
     <div class="vault__grid">
@@ -128,7 +128,6 @@ const resetFilters = () => {
             {{ copiedId === snippet.id ? 'Kopieret! ✓' : 'Kopiér' }}
           </button>
         </div>
-
 
         <footer class="snippet-card__footer">
           <div class="snippet-card__tags">
@@ -159,10 +158,14 @@ const resetFilters = () => {
         </footer>
       </article>
 
-        <p v-if="filteredSnippets.length === 0" class="vault__empty">
-          Ingen snippets matchede din søgning.
-        </p>
+      <p v-if="filteredSnippets.length === 0" class="vault__empty">
+        Ingen snippets matchede din søgning.
+      </p>
+    </div>
 
+    <!-- API Feature visning -->
+    <div class="api-feature" v-if="devJoke">
+      <p>🤖 <strong>Dagens Dev-Joke (Hentet via API):</strong> {{ devJoke }}</p>
     </div>
   </main>
 </template>
@@ -228,7 +231,7 @@ const resetFilters = () => {
     font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    white-space: nowrap; // Sikrer at teksten ikke knækker over to linjer
+    white-space: nowrap;
 
     &:hover {
       background-color: $color-border;
@@ -244,11 +247,9 @@ const resetFilters = () => {
   }
 
   &__grid {
-    // Skaber kolonnerne
-    column-count: 1; // Standard på mobil
+    column-count: 1; 
     column-gap: 20px;
 
-    // Tilføjer flere kolonner i takt med at skærmen bliver bredere
     @media (min-width: 768px) {
       column-count: 2;
     }
@@ -256,11 +257,10 @@ const resetFilters = () => {
       column-count: 3;
     }
     @media (min-width: 1600px) {
-      column-count: 4; // Perfekt til ultrabrede skærme
+      column-count: 4; 
     }
   }
 }
-
 
 .snippet-card {
   break-inside: avoid; 
@@ -330,15 +330,7 @@ const resetFilters = () => {
     margin-bottom: 15px;
   }
 
-  &__code-block {
-    background-color: $color-code-bg;
-    color: $color-code-text;
-    padding: 15px;
-    border-radius: $border-radius-sm;
-    overflow-x: auto;
-  }
-
-&__footer {
+  &__footer {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -363,33 +355,47 @@ const resetFilters = () => {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: transparent; // Fjern browserens standard hvide/grå baggrund på <button>
+    background: transparent; 
     border: none;
-    padding: 8px; // Ekstra luft omkring ikonet
+    padding: 8px; 
     border-radius: $border-radius-sm;
-    color: $color-primary; // Tydelig, lys farve i stedet for en mørk grå
+    color: $color-primary; 
     cursor: pointer;
     transition: all 0.2s ease;
 
     svg {
       display: block;
-      width: 20px;  // Tvinger ikonet op i en ordentlig, læsbar størrelse
+      width: 20px; 
       height: 20px;
     }
 
-    // Rediger ikon (Hover)
     &--edit:hover {
       color: $color-accent;
       border-color: $color-accent;
       background-color: rgba(244, 166, 215, 0.15);
     }
 
-    // Slet ikon (Hover)
     &--delete:hover {
       color: #ef4444;
       border-color: #ef4444;
       background-color: rgba(239, 68, 68, 0.15);
     }
+  }
+}
+
+// Styling til API sektionen
+.api-feature {
+  margin-top: 40px;
+  padding: 15px;
+  border-top: 1px dashed $color-border;
+  text-align: center;
+  color: $color-text-muted;
+  font-size: 0.9rem;
+  font-style: italic;
+
+  strong {
+    color: $color-primary;
+    margin-right: 5px;
   }
 }
 </style>
