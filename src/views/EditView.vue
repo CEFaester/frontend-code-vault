@@ -139,6 +139,7 @@ const updateSnippet = async () => {
     padding: 12px;
     border: 1px solid $color-border;
     border-radius: $border-radius-sm;
+    color: $color-primary;
     font-family: inherit;
     font-size: 1rem;
     background-color: $color-surface;
@@ -159,7 +160,7 @@ const updateSnippet = async () => {
     margin-top: 10px;
     padding: 12px 24px;
     background-color: $color-accent;
-    color: white;
+    color: $color-primary;
     border: none;
     border-radius: $border-radius-sm;
     font-size: 1rem;

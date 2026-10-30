@@ -352,7 +352,7 @@ const resetFilters = () => {
   }
 
   &__tag {
-    background-color: darken($color-background, 5%);
+    background-color: rgba(255, 255, 255, 0.05);
     color: $color-text-muted;
     padding: 4px 10px;
     border-radius: $border-radius-pill;
