@@ -31,7 +31,6 @@ onMounted(() => {
 const deleteSnippet = async (id) => {
   if (confirm("Er du sikker på, at du vil slette denne snippet?")) {
     try {
-      // Byg dit endpoint: Database URL + stien til den specifikke snippet + .json
       const firebaseUrl = `https://programmerings-hjaelper-default-rtdb.europe-west1.firebasedatabase.app/snippets/${id}.json`
       
       // Bruger metoden DELETE
@@ -39,7 +38,7 @@ const deleteSnippet = async (id) => {
         method: 'DELETE'
       })
 
-      // Tjekker om API'et svarede tilbage med en succes-kode (f.eks. 200 OK)
+      // Tjekker om API'et svarede tilbage med en succes-kode
       if (!response.ok) {
         throw new Error('Netværksfejl: Kunne ikke slette i databasen')
       }
